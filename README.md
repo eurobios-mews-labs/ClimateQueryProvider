@@ -12,7 +12,7 @@ _**ClimateQueryProvider**_ is a python package proposed to download ECMWF data a
 To install the package using pip, execute the following command :
 
 ``` shell script
-python -m pip install git+https://gitlab.eurobios.com/main/ClimateQueryProvider.git
+python -m pip install git+https://github.com/selidrissiraghni/ClimateQueryProvider.git
 ```
 
 Or by downloading the package and executing in the repo :
