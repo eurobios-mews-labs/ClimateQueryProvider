@@ -14,6 +14,16 @@
 import numpy as np
 import pandas as pd
 import os
+import time
+
+def chrono(func):
+    def wrapper(*args, **kwargs):
+        t0 = time.time()
+        res = func(*args, **kwargs)
+        print("⏰ %s: %.6f seconds" % (func.__name__, time.time() - t0))
+        return res
+
+    return wrapper
 
 def get_bbox():
     bbox = pd.read_csv(os.path.dirname(os.path.realpath(__file__)) + '/bbox_countries.csv')

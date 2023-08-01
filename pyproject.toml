@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cqpro"
-version = "2023.2.1"
+version = "2023.2.1.1"
 authors = [{ name = "Eurobios", email = "contact_ost@eurobios.com" }]
 description = "Python API for Meteorogical data from ECMWF"
 urls = {repository = "https://github.com/eurobios-scb/ClimateQueryProvider"}
