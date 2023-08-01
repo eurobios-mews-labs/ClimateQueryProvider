@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import sys, os
+sys.path.append(os.path.dirname(__file__))
+
 import xarray as xr
 import pandas as pd
 import numpy as np
+from utils import chrono
 
 class retriever:
 
@@ -120,6 +124,7 @@ class retriever:
         """
         if lat >= self.lat_min and lat <= self.lat_max and lon >= self.lon_min and lon <= self.lon_max:
             return True
+        print('GPS point ({0}, {1}) not in the range'.format(lat, lon))
         return False
     
     def check_in_history(self, history_start: pd.Timestamp, history_end: pd.Timestamp) -> bool:
@@ -145,7 +150,9 @@ class retriever:
                 return True
             return False
 
-    def get_data(self, lats: np.ndarray, lons: np.ndarray, history_start: str = None, history_end: str = None, xarray=False) -> pd.DataFrame:
+    @chrono
+    def get_data(self, lats: np.ndarray, lons: np.ndarray, history_start: str = None, history_end: str = None,
+                xarray: bool = False, check_in_box_bool: bool = False) -> pd.DataFrame:
         """.
 
         Parameters
@@ -158,12 +165,18 @@ class retriever:
             Beggining timestamp.
         history_end : Timestamp
             End timestamp.
+        xarray : boolean
+            True to retrieve data as a xarray.Dataset
+        check_in_box_bool : boolean
+            True to raise error if gps point not in the box / False to continue without checking
 
         Returns
         -------
         DataFrame
             .
         """
+        if len(lats) != len(lons): raise Exception('longitudes and latitudes do not match len')
+
         if history_start is None:
             history_start = self.history_min
         else:
@@ -174,7 +187,7 @@ class retriever:
         else:
             history_end = pd.to_datetime(history_end)
     
-        if not self.check_in_box_l(lats, lons) :
+        if not self.check_in_box_l(lats, lons) and check_in_box_bool:
             raise Exception('lat and lon not in the box : lat range [{}, {}], lon range [{}, {}]'.format(self.lat_min, self.lat_max, self.lon_min, self.lon_max))
         
         if not self.check_in_history(history_start, history_end):
@@ -197,101 +210,3 @@ class retriever:
         df_res = df_res[['time', 'longitude', 'approx_longitude', 'latitude', 'approx_latitude', self.var_name]]
 
         return df_res
-        
-        # # print(self.file.sel(latitude=45.5, longitude=0.3, method='nearest'))
-        # # print(f"{self.file.info()}")
-        # # print('-'*50)
-        # # df = df.sel(time=slice(history_start, history_end))
-        # # print(f"{df.info() =} ")
-
-        # mapped_lat = df['latitude'].to_numpy()
-        # mapped_long = df['longitude'].to_numpy()
-        # coord = np.column_stack((mapped_lat, mapped_long))
-
-        # unique_coord, unique_id, unique_inverse = np.unique(coord, return_index=True, return_counts=False,
-        #                                                 return_inverse=True, axis=0)
-        
-        # # print(f"{unique_coord = }")
-        # # print(f"{unique_id = }")
-
-        # nb_coords = len(lats)
-        # nb_timestamps = len(pd.date_range(history_start, history_end, freq='H'))
-        # lat_id = np.repeat(unique_id, nb_timestamps)
-        # long_id = lat_id.copy()
-        # time_id = np.resize(np.arange(nb_timestamps), nb_timestamps * nb_coords)
-
-        # # print(xr.DataArray(lat_id, dims=var_name).values)
-        # # print(xr.DataArray(long_id, dims=var_name))
-        # # print(xr.DataArray(time_id, dims=var_name))
-
-        # lats_ = xr.DataArray([44.3, 45.2], dims=['location'])
-        # lons_ = xr.DataArray([-1.01, 0.3], dims=['location'])
-        # print(lats_)
-
-        # df.sel(longitude=lons_, latitude=lats_, method='nearest')
-        # print(df)
-        # exit()
-
-
-
-        # res = df.isel(latitude=xr.DataArray(lat_id, dims=var_name),
-        #     longitude=xr.DataArray(long_id, dims=var_name),
-        #     time=xr.DataArray(time_id, dims=var_name))
-        df.sel_points
-        
-        # print(lat_id)
-        # print(xr.DataArray(lat_id, dims=var_name, coords='latitude'))
-        # exit()
-        # res = df.isel(latitude=lat_id,
-        #     longitude=long_id,
-        #     time=time_id)
-        
-        # print(f"{res = }")
-        # # print(res.values())
-        # # print(res['t2m'].values)
-        # print('-'*50)
-        # print(res.to_dataframe())
-        # # # print(f"{res.info = }")
-        # # print('-'*50)
-        # # print(res.to_dataframe())
-        # # print('-'*50)
-        # # print(res[var_name])
-
-        # if xarray:
-        #     return df
-
-        # # df = df.to_dataframe().reset_index()
-        # # df['latitude'] = df['latitude'].astype('float32').round(1)
-        # # df['longitude'] = df['longitude'].astype('float32').round(1)
-        # # print(df)
-        # # df = df.set_index(['longitude', 'latitude'])
-        # # # df = df.loc[[(round(e[0], 1), round(e[1], 1)) for e in zip(lons, lats)], :]
-
-        # # print(df)
-        # # df = df.pivot(columns=['time'])
-        # return df
-        
-    
-    def poit_wise_indexing(self, subset_data: xr.Dataset, start_time: str, end_time: str) -> np.ndarray:
-        
-        unique_id = list(zip(subset_data.longitude.values, subset_data.latitude.values))
-        print(unique_id)
-
-        var_name = self._get_var_name()
-        # create index arrays
-        nb_coords = len(unique_id)
-        nb_timestamps = len(pd.date_range(start_time, end_time, freq='H'))
-        lat_id = np.repeat(unique_id, nb_timestamps)
-        long_id = lat_id.copy()
-        print(long_id)
-        time_id = np.resize(np.arange(nb_timestamps), nb_timestamps * nb_coords)
-        print(time_id)
-        # indexing in 3D
-        res = subset_data.isel(latitude=xr.DataArray(lat_id, dims=var_name),
-                            longitude=xr.DataArray(long_id, dims=var_name),
-                            time=xr.DataArray(time_id, dims=var_name))
-
-        # convert to np.array for later calculation
-        res_numpy = res[var_name].to_numpy()
-
-        return res_numpy

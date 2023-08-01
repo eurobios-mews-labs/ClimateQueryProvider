@@ -77,7 +77,7 @@ r = retriever(path=path, file_name=file_name)
 
 # history_start should always be before history_end and both fo them should be in the range of the file history
 
-df = r.get_data(lat=45, lon=-3, history_start='2020-03-02', history_end='2020-03-03 03:03:00')
+df = r.get_data(lat=[45, 44, 43], lon=[-3, -2, -1], history_start='2020-03-02', history_end='2020-03-03 03:03:00')
 
 print(r._get_history_range())
 print(r._get_grid_range())

@@ -6,3 +6,4 @@ __pycache__/
 .eggs
 build/
 dist/
+test/test_all_portee.py
