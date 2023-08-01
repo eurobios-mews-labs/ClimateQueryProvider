@@ -11,17 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from cqpro.query_data import retriever
+import sys
+sys.path.append('../')
 
+from src.cqpro.query_data import retriever
 
-path = 'data/'
+path = '../data/'
 file_name = "2m_temperature.nc"
 
 r = retriever(path=path, file_name=file_name)
-df = r.get_data(45, -3, '2020-09-01 23:00:00', '2020-09-02 23:00:00')
+df = r.get_data([48.641, 48.642, 46.24, 44.25645], [-2, -2.03, -1, 0.2135],  
+                '2020-09-01 12:00:00', '2020-09-01 16:00:00')
 
-print(r._get_history_range())
-print(r._get_grid_range())
-print(r._get_var_name())
-
-print(df)
+print(df.drop_duplicates())
