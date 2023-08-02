@@ -16,8 +16,7 @@ from cqpro.download_data import downloader
 DATASET='reanalysis-era5-single-levels'
 VARS = ['2m_temperature']
 YEARS = [2020]
-# HOURS = ['23:00'] # ['%02d:00' % (e,) for e in range(24)] # All hours
-HOURS = ['%02d:00' % (e,) for e in range(24)] # All hours
+HOURS = ['23:00'] # ['%02d:00' % (e,) for e in range(24)] # All hours
 DAYS = ['01', '02'] # ['%02d' % (e,) for e in range(1, 32)] # All days
 MONTHS = ['09'] # ['%02d' % (e,) for e in range(1, 13)] # All months
 RESOL = 0.1
