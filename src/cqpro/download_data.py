@@ -20,7 +20,7 @@ from utils import get_bbox
 class downloader:
 
     def __init__(self, variables, years, months, days, hours, output_path, LAT_MIN=None, LAT_MAX=None, LON_MIN=None,  LON_MAX=None, country='France',
-                  dataset='reanalysis-era5-single-levels', resolution=0.1):
+                  dataset='reanalysis-era5-single-levels', resolution=0.1, **kwargs):
         
         if country is None:
             if LAT_MIN is None | LAT_MAX is None | LON_MIN is None | LON_MAX is None:
@@ -43,6 +43,7 @@ class downloader:
         self.time = hours
         self.grid = [resolution, resolution]
         self.output_path = output_path
+        self.kwargs = kwargs
 
     def download(self):
         for var in self.variables:
@@ -52,8 +53,7 @@ class downloader:
             if var == 'wind':
                 var = ['10m_u_component_of_wind', '10m_v_component_of_wind']
 
-            self.c.retrieve(self.dataset,
-                            {'product_type': 'reanalysis',
+            dico_args = {'product_type': 'reanalysis',
                             'format': 'netcdf',
                             'variable': var,
                             'year': self.years,
@@ -61,5 +61,8 @@ class downloader:
                             'day': self.days,
                             'grid': self.grid,
                             'area': [self.LAT_MAX, self.LON_MIN, self.LAT_MIN, self.LON_MAX],
-                            'time': self.time},
-                            self.output_path + name + '.nc')
+                            'time': self.time}
+            dico_args.update(self.kwargs)
+            print(dico_args)
+
+            self.c.retrieve(self.dataset, dico_args, self.output_path + name + '.nc')

@@ -7,3 +7,4 @@ __pycache__/
 build/
 dist/
 test/test_all_portee.py
+test/test_cems.py
