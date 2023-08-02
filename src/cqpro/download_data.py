@@ -63,6 +63,5 @@ class downloader:
                             'area': [self.LAT_MAX, self.LON_MIN, self.LAT_MIN, self.LON_MAX],
                             'time': self.time}
             dico_args.update(self.kwargs)
-            print(dico_args)
 
             self.c.retrieve(self.dataset, dico_args, self.output_path + name + '.nc')
