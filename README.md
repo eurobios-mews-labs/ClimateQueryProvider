@@ -40,7 +40,7 @@ You can find the list of available variables here : https://confluence.ecmwf.int
 Example of script to download wind and temperature data for year 2020 in France:
 
 ``` python
-from cqpro.download_data import downloader
+from cqpro.download_data import Downloader
 
 DATASET='reanalysis-era5-single-levels'
 VARS = ['2m_temperature']
@@ -51,7 +51,7 @@ MONTHS = ['%02d' % (e,) for e in range(1, 13)] # All months
 RESOL = 0.1
 OUTPUT_PATH = 'data/' # choose an existing path 
 
-d = downloader(variables=VARS, years=YEARS, months=MONTHS, days=DAYS, hours=HOURS, output_path=OUTPUT_PATH,
+d = Downloader(variables=VARS, years=YEARS, months=MONTHS, days=DAYS, hours=HOURS, output_path=OUTPUT_PATH,
                 dataset=DATASET, resolution=RESOL, country='France')
 d.download()
 ```

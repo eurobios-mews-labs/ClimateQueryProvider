@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import numpy as np
-import pandas as pd
 import os
 import time
+
+import numpy as np
+import pandas as pd
 from memory_profiler import memory_usage
 
 
@@ -29,12 +30,14 @@ def memo_chrono(func):
 
         msg = "⏰ %s: Execution time %.6f s | " % (func.__name__, end_time - start_time)
         msg += f'Memory {int(max(mem) - min(mem))}' + " MiB"
-        
+
         print(msg)
         return result
     return wrapper
 
 def get_bbox():
+    """ Function to retrieve all bounding boxes of countries
+    """
     bbox = pd.read_csv(os.path.dirname(os.path.realpath(__file__)) + '/bbox_countries.csv')
     return bbox
 
@@ -47,6 +50,8 @@ def deg_to_rad(alpha):
     return alpha * np.pi / 180
 
 def compute_wind_speed(u_ms, v_ms):
+    """ Main function to compute wind speed
+    """
     return np.sqrt(u_ms ** 2 + v_ms ** 2)
 
 def compute_wind_dir(u_ms, v_ms):
@@ -85,7 +90,8 @@ def compute_normal_wind(ws, wd, azimuth):
 #     lon_sup = pr.LONS[pr.LONS > lon][0]
 
 #     return {'lat_inf': lat_inf, 'lat_sup': lat_sup, 'lon_inf': lon_inf, 'lon_sup': lon_sup,
-#             'coords': [(lat_inf, lon_inf), (lat_inf, lon_sup), (lat_sup, lon_inf), (lat_sup, lon_sup)]}
+#             'coords': [(lat_inf, lon_inf), (lat_inf, lon_sup),
+#                             (lat_sup, lon_inf), (lat_sup, lon_sup)]}
 
 # # bilinear interpolation
 

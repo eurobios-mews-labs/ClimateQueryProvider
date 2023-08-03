@@ -11,17 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+import sys
 import cdsapi
-import os, sys
+
 sys.path.append(os.path.dirname(__file__))
+
 from utils import get_bbox
 
 # Class to download data from ECMW api
-class downloader:
+class Downloader:
+    """ Main class to download meteo data via the cds api 
+    """
 
-    def __init__(self, variables, years, months, days, hours, output_path, LAT_MIN=None, LAT_MAX=None, LON_MIN=None,  LON_MAX=None, country='France',
-                  dataset='reanalysis-era5-single-levels', resolution=0.1, **kwargs):
-        
+    def __init__(self, variables, years, months, days, hours, output_path,
+                    LAT_MIN=None, LAT_MAX=None, LON_MIN=None,  LON_MAX=None, country='France',
+                    dataset='reanalysis-era5-single-levels', resolution=0.1, **kwargs):
+
         if country is None:
             if LAT_MIN is None | LAT_MAX is None | LON_MIN is None | LON_MAX is None:
                 raise Exception("Please provide a box or a country")
@@ -32,7 +38,9 @@ class downloader:
         else:
             print(country)
             bbox = get_bbox()
-            self.LAT_MAX, self.LAT_MIN, self.LON_MIN, self.LON_MAX = bbox[bbox['country_name'] == country][['LAT_MAX', 'LAT_MIN', 'LON_MIN', 'LON_MAX' ]].values[0]
+            self.LAT_MAX, self.LAT_MIN, self.LON_MIN, self.LON_MAX = \
+                bbox[bbox['country_name'] == country] \
+                [['LAT_MAX', 'LAT_MIN', 'LON_MIN', 'LON_MAX' ]].values[0]
 
         self.c = cdsapi.Client()
         self.dataset = dataset
