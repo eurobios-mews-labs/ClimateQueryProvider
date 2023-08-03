@@ -17,7 +17,7 @@ sys.path.append(os.path.dirname(__file__))
 import xarray as xr
 import pandas as pd
 import numpy as np
-from utils import chrono
+from utils import memo_chrono
 
 class retriever:
 
@@ -150,10 +150,10 @@ class retriever:
                 return True
             return False
 
-    @chrono
+    @memo_chrono
     def get_data(self, lats: np.ndarray, lons: np.ndarray, history_start: str = None, history_end: str = None,
                 xarray: bool = False, check_in_box_bool: bool = False) -> pd.DataFrame:
-        """.
+        """Main function to retrieve meteo data
 
         Parameters
         ----------
@@ -175,7 +175,7 @@ class retriever:
         DataFrame
             .
         """
-        if len(lats) != len(lons): raise Exception('longitudes and latitudes do not match len')
+        if len(lats) != len(lons): raise Exception('longitudes and latitudes do not match length')
 
         if history_start is None:
             history_start = self.history_min

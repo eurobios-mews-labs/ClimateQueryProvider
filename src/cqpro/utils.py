@@ -15,14 +15,23 @@ import numpy as np
 import pandas as pd
 import os
 import time
+from memory_profiler import memory_usage
 
-def chrono(func):
+
+def memo_chrono(func):
+    """ Decorator for time and memory usage
+    """
     def wrapper(*args, **kwargs):
-        t0 = time.time()
-        res = func(*args, **kwargs)
-        print("⏰ %s: %.6f seconds" % (func.__name__, time.time() - t0))
-        return res
+        start_time = time.time()
+        mem, result = memory_usage((func, args, kwargs), retval=True, timeout=200,
+                                   interval=1e-7)
+        end_time = time.time()
 
+        msg = "⏰ %s: Execution time %.6f s | " % (func.__name__, end_time - start_time)
+        msg += f'Memory {int(max(mem) - min(mem))}' + " MiB"
+        
+        print(msg)
+        return result
     return wrapper
 
 def get_bbox():
@@ -61,19 +70,6 @@ def compute_normal_wind(ws, wd, azimuth):
     wd = deg_to_rad(wd)
     azimuth = deg_to_rad(azimuth)
     return np.abs(ws * np.sin(wd - azimuth))
-
-def compute_normal_wind(ws, wd, azimuth):
-    """
-
-    :param ws: wind speed
-    :param wd: wind direction
-    :param azimuth: azimuth of the line
-    :return:
-    """
-    wd = np.mod(wd, 180)
-    wd = deg_to_rad(wd)
-    azimuth = deg_to_rad(azimuth)
-    return np.abs(ws*np.sin(wd-azimuth))
 
 # def get_neighbors_coords(self, lat, lon):
 #     """
