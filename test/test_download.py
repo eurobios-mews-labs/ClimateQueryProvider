@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from cqpro.download_data import downloader
+from cqpro.download_data import Downloader
 
 DATASET='reanalysis-era5-single-levels'
 VARS = ['2m_temperature']
@@ -22,6 +22,6 @@ MONTHS = ['09'] # ['%02d' % (e,) for e in range(1, 13)] # All months
 RESOL = 0.1
 OUTPUT_PATH = '../data/' # choose an existing path 
 
-d = downloader(variables=VARS, years=YEARS, months=MONTHS, days=DAYS, hours=HOURS, output_path=OUTPUT_PATH,
+d = Downloader(variables=VARS, years=YEARS, months=MONTHS, days=DAYS, hours=HOURS, output_path=OUTPUT_PATH,
                 dataset=DATASET, resolution=RESOL, country='France')
 d.download()
