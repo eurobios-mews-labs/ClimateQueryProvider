@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from cqpro.download_data import downloader
+from cqpro.download_data import Downloader
 
 DATASET='reanalysis-era5-single-levels'
 VARS = ['2m_temperature']

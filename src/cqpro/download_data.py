@@ -21,12 +21,12 @@ from utils import get_bbox
 
 # Class to download data from ECMW api
 class Downloader:
-    """ Main class to download meteo data via the cds api 
+    """ Main class to download meteo data via the cds api
     """
 
     def __init__(self, variables, years, months, days, hours, output_path,
-                    LAT_MIN=None, LAT_MAX=None, LON_MIN=None,  LON_MAX=None, country='France',
-                    dataset='reanalysis-era5-single-levels', resolution=0.1, **kwargs):
+                 LAT_MIN=None, LAT_MAX=None, LON_MIN=None, LON_MAX=None, country='France',
+                 dataset='reanalysis-era5-single-levels', resolution=0.1, **kwargs):
 
         if country is None:
             if LAT_MIN is None | LAT_MAX is None | LON_MIN is None | LON_MAX is None:
@@ -40,7 +40,7 @@ class Downloader:
             bbox = get_bbox()
             self.LAT_MAX, self.LAT_MIN, self.LON_MIN, self.LON_MAX = \
                 bbox[bbox['country_name'] == country] \
-                [['LAT_MAX', 'LAT_MIN', 'LON_MIN', 'LON_MAX' ]].values[0]
+                [['LAT_MAX', 'LAT_MIN', 'LON_MIN', 'LON_MAX']].values[0]
 
         self.c = cdsapi.Client()
         self.dataset = dataset
@@ -62,14 +62,14 @@ class Downloader:
                 var = ['10m_u_component_of_wind', '10m_v_component_of_wind']
 
             dico_args = {'product_type': 'reanalysis',
-                            'format': 'netcdf',
-                            'variable': var,
-                            'year': self.years,
-                            'month': self.months,
-                            'day': self.days,
-                            'grid': self.grid,
-                            'area': [self.LAT_MAX, self.LON_MIN, self.LAT_MIN, self.LON_MAX],
-                            'time': self.time}
+                         'format': 'netcdf',
+                         'variable': var,
+                         'year': self.years,
+                         'month': self.months,
+                         'day': self.days,
+                         'grid': self.grid,
+                         'area': [self.LAT_MAX, self.LON_MIN, self.LAT_MIN, self.LON_MAX],
+                         'time': self.time}
             dico_args.update(self.kwargs)
 
             self.c.retrieve(self.dataset, dico_args, self.output_path + name + '.nc')
