@@ -14,7 +14,7 @@
 from cqpro.download_data import Downloader
 
 DATASET='reanalysis-era5-single-levels'
-VARS = ['2m_temperature']
+VARS = ['2m_temperature', 'surface_pressure']
 YEARS = [2020]
 HOURS = ['23:00'] # ['%02d:00' % (e,) for e in range(24)] # All hours
 DAYS = ['01', '02'] # ['%02d' % (e,) for e in range(1, 32)] # All days
@@ -24,4 +24,7 @@ OUTPUT_PATH = '../data/' # choose an existing path
 
 d = Downloader(variables=VARS, years=YEARS, months=MONTHS, days=DAYS, hours=HOURS, output_path=OUTPUT_PATH,
                 dataset=DATASET, resolution=RESOL, country='France')
+# Simple thread
 d.download()
+# Multi thread here 2 threads
+d.download(num_proc = 2)

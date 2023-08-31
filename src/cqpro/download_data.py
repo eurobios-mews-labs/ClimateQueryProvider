@@ -14,12 +14,12 @@
 import os
 import sys
 import cdsapi
+import multiprocessing.dummy as mp
 
 sys.path.append(os.path.dirname(__file__))
 
 from utils import get_bbox
 
-# Class to download data from ECMW api
 class Downloader:
     """ Main class to download meteo data via the cds api
     """
@@ -53,23 +53,59 @@ class Downloader:
         self.output_path = output_path
         self.kwargs = kwargs
 
-    def download(self):
-        for var in self.variables:
-            print('downloading historic for ' + var)
+    def download_var(self, var: str) -> None:
+        """Main function to download 1 variable
+        
+        Parameters
+        ----------
+        var : str
+            Name of variable : list of available variables here : 
+            https://confluence.ecmwf.int/display/CKB/ERA5%3A+data+documentation
 
-            name = var
-            if var == 'wind':
-                var = ['10m_u_component_of_wind', '10m_v_component_of_wind']
+        Returns
+        -------
+        None
+        """
 
-            dico_args = {'product_type': 'reanalysis',
-                         'format': 'netcdf',
-                         'variable': var,
-                         'year': self.years,
-                         'month': self.months,
-                         'day': self.days,
-                         'grid': self.grid,
-                         'area': [self.LAT_MAX, self.LON_MIN, self.LAT_MIN, self.LON_MAX],
-                         'time': self.time}
-            dico_args.update(self.kwargs)
+        print('downloading historic for ' + var)
 
-            self.c.retrieve(self.dataset, dico_args, self.output_path + name + '.nc')
+        name = f"{var}_{self.years[0]}_{self.months[0]}_to_{self.years[-1]}_{self.months[-1]}"
+        if var == 'wind':
+            var = ['10m_u_component_of_wind', '10m_v_component_of_wind']
+
+        dico_args = {'product_type': 'reanalysis',
+                        'format': 'netcdf',
+                        'variable': var,
+                        'year': self.years,
+                        'month': self.months,
+                        'day': self.days,
+                        'grid': self.grid,
+                        'area': [self.LAT_MAX, self.LON_MIN, self.LAT_MIN, self.LON_MAX],
+                        'time': self.time}
+        dico_args.update(self.kwargs)
+
+        self.c.retrieve(self.dataset, dico_args, self.output_path + name + '.nc')
+    
+    def download(self, num_proc: int = 1):
+        """Main function to download all variables in parallel
+
+        Although the server does not process queries in parallel, a query can be run while others are downloading
+        
+        Parameters
+        ----------
+        num_proc : int
+            Number of proc to be used
+
+        Returns
+        -------
+        None
+        """
+
+        if num_proc < 2:
+            for var in self.variables:
+                self.download_var(var)
+        else:
+            pool = mp.Pool(processes=num_proc)
+            pool.map(self.download_var, self.variables)
+            pool.close()
+            pool.join()
