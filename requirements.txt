@@ -6,3 +6,4 @@ netCDF4 == 1.6.3
 cdsapi == 0.6.1
 sphinx == 6.2.1
 sphinx_rtd_theme == 1.2.0
+memory_profiler
