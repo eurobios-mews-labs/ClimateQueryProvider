@@ -32,7 +32,7 @@ def test_download():
     d.download()
     # Multi thread here 2 threads
     # d.download(num_proc = 2)
-    assert '2m_temperature.nc' in os.listdir(OUTPUT_PATH)
+    assert '2m_temperature_2020_09_to_2020_09.nc' in os.listdir(OUTPUT_PATH)
 
 
 def test_query():
