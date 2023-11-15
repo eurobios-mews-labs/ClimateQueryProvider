@@ -4,3 +4,4 @@ xarray
 cdsapi == 0.6.1
 memory_profiler
 netcdf4
+pytest
