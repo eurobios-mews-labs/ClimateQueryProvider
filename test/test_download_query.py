@@ -14,10 +14,10 @@
 from src.cqpro.download_data import Downloader
 from src.cqpro.query_data import retriever
 import os
-print(os.environ)
+
 
 def test_download():
-
+    print(os.environ)
     DATASET='reanalysis-era5-single-levels'
     VARS = ['2m_temperature']
     YEARS = [2020]
