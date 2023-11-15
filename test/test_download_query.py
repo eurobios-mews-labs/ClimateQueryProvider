@@ -17,7 +17,7 @@ import os
 
 
 def test_download():
-    print(os.environ)
+    print(os.environ['CDSAPI_KEY'])
     DATASET='reanalysis-era5-single-levels'
     VARS = ['2m_temperature']
     YEARS = [2020]
