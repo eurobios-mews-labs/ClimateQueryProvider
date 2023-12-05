@@ -15,8 +15,9 @@ from src.cqpro.download_data import Downloader
 from src.cqpro.query_data import retriever
 import os
 
-def test_download():
 
+def test_download():
+    print(os.environ['CDSAPI_KEY'])
     DATASET='reanalysis-era5-single-levels'
     VARS = ['2m_temperature']
     YEARS = [2020]
