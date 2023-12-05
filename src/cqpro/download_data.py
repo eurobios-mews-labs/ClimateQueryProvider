@@ -29,7 +29,7 @@ class Downloader:
                  dataset='reanalysis-era5-single-levels', resolution=0.1, **kwargs):
 
         if country is None:
-            if LAT_MIN is None | LAT_MAX is None | LON_MIN is None | LON_MAX is None:
+            if LAT_MIN is None or LAT_MAX is None or LON_MIN is None or LON_MAX is None:
                 raise Exception("Please provide a box or a country")
             self.LAT_MAX = LAT_MAX
             self.LAT_MIN = LAT_MIN
